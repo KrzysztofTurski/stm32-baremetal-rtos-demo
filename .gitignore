@@ -1,55 +1,43 @@
-# Prerequisites
-*.d
+# =========================
+# STM32CubeIDE / Eclipse
+# =========================
+.metadata/
+.settings/
 
-# Object files
+# Build outputs (CubeIDE)
+Debug/
+Release/
+build/
+
+# =========================
+# Toolchain / compiler artifacts
+# =========================
 *.o
-*.ko
-*.obj
-*.elf
-
-# Linker output
-*.ilk
-*.map
-*.exp
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
 *.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
+*.elf
+*.map
 *.hex
-
-# Debug files
-*.dSYM/
+*.bin
+*.d
 *.su
+
+# =========================
+# Object / dependency (generic C/C++)
+# =========================
+*.obj
+
+# =========================
+# Debug / symbols (harmless to ignore)
+# =========================
+*.dSYM/
 *.idb
 *.pdb
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
-
-# debug information files
-*.dwo
+# =========================
+# OS junk / temp
+# =========================
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
