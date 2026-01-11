@@ -28,4 +28,11 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>core</name>
+			<type>2</type>
+			<location>C:/Users/tur/Desktop/RTOS/stm32-baremetal-rtos-demo/core</location>
+		</link>
+	</linkedResources>
 </projectDescription>
