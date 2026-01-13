@@ -108,38 +108,6 @@ void SysTick_Handler(void)
     INTCTRL = PENDSVSET;
 }
 
-__attribute__((naked)) void PendSV_Handler(void)
-{
-    __asm("CPSID I");
-    __asm("PUSH {R4-R11}");
-    __asm("LDR R0, =currentPt");
-    __asm("LDR R1, [R0]");
-    __asm("STR SP, [R1]");
-    __asm("PUSH {R0, LR}");
-    __asm("BL osSchedulerRoundRobin");
-    __asm("POP {R0, LR}");
-    __asm("LDR R1, [R0]");
-    __asm("LDR SP, [R1]");
-    __asm("POP {R4-R11}");
-    __asm("CPSIE I");
-    __asm("BX LR");
-}
-
-void osSchedulerLaunch(void)
-{
-    __asm("LDR R0, =currentPt");
-    __asm("LDR R2, [R0]");
-    __asm("LDR SP, [R2]");
-    __asm("POP {R4-R11}");
-    __asm("POP {R12}");
-    __asm("POP {R0-R3}");
-    __asm("ADD SP, SP, #4");
-    __asm("POP {LR}");
-    __asm("ADD SP, SP, #4");
-    __asm("CPSIE I");
-    __asm("BX LR");
-}
-
 void osThreadYield(void)
 {
     INTCTRL = PENDSVSET;
