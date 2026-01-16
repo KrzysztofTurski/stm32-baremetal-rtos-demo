@@ -6,7 +6,7 @@
 .global osSchedulerLaunch
 
 .extern currentPt
-.extern osSchedulerRoundRobin
+.extern osSchedulerRRWithSleep
 
 /* ---------------- PendSV_Handler ---------------- */
 .type   PendSV_Handler, %function
@@ -21,7 +21,7 @@ PendSV_Handler:
     str     sp, [r1]
 
     push    {r0, lr}
-    bl      osSchedulerRoundRobin
+    bl      osSchedulerRRWithSleep
     pop     {r0, lr}
 
     ldr     r1, [r0]

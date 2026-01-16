@@ -1,45 +1,19 @@
+#include "app.h"
 #include "osKernel.h"
 #include <stdint.h>
 
-#define QUANTA 10U
+#define QUANTA_MS 1
 
-volatile uint32_t c0, c1, c2, hook;
+volatile uint32_t count0, count1, count2;
 
-void task3(void)
-{
-	hook++;
-}
-
-static void task0(void)
-{
-	while(1)
-	{
-		c0++;
-		osThreadYield();
-	}
-}
-
-static void task1(void)
-{
-	while(1)
-	{
-		c1++;
-	}
-}
-
-static void task2(void)
-{
-	while(1)
-	{
-		c2++;
-	}
-}
+static void Task0(void){ while(1){ count0++; osThreadYield(); } }
+static void Task1(void){ while(1){ count1++; osThreadSleep(250); } }
+static void Task2(void){ while(1){ count2++; osThreadSleep(500); } }
 
 void app_start(void)
 {
-	osKernelInit();
-	osKernelAddThreads(&task0, &task1, &task2);
-	osKernelLaunch(QUANTA);
-
-	while(1) {}
+    osKernelInit();
+    osKernelAddThreads(&Task0, &Task1, &Task2);
+    osKernelLaunch(QUANTA_MS);
+    while(1){}
 }
