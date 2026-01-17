@@ -50,6 +50,10 @@
 									<listOptionValue builtIn="false" value="../../../platform/stm32f411/cmsis/Device/ST/STM32F4xx/Include"/>
 									<listOptionValue builtIn="false" value="../../../core/rtos"/>
 									<listOptionValue builtIn="false" value="../../../core/app"/>
+									<listOptionValue builtIn="false" value="../../../core/drivers/bus/usart"/>
+									<listOptionValue builtIn="false" value="../../../core/rtos/ipc"/>
+									<listOptionValue builtIn="false" value="../-I../../core/app"/>
+									<listOptionValue builtIn="false" value="../../../core/app/log"/>
 								</option>
 								<inputType id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.2046917601" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c"/>
 							</tool>
