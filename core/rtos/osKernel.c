@@ -17,12 +17,21 @@ static void IdleTask(void);
 #define PENDSVSET        (1U << 28)
 
 uint32_t MILLIS_PRESCALER;
+typedef enum {
+    READY,
+    BLOCKED_MUTEX,
+    SLEEPING
+} threadState_t;
+
 
 typedef struct tcb {
     int32_t *stackPt;
     struct tcb *nextPt;
+
     volatile uint32_t sleepTime;
+    threadState_t state;
 } tcbType;
+
 
 tcbType tcbs[NUM_OF_THREADS];
 tcbType *currentPt;
@@ -31,6 +40,7 @@ static int32_t TCB_STACK[NUM_OF_THREADS][STACKSIZE];
 
 void osSchedulerLaunch(void);
 void osSchedulerRRWithSleep(void);
+/*--------------------------------------------------*/
 
 static void IdleTask(void)
 {
@@ -38,6 +48,9 @@ static void IdleTask(void)
         __WFI();
     }
 }
+
+/*--------------------------------------------------*/
+
 
 static void osKernelStackInit(int i)
 {
@@ -59,6 +72,8 @@ static void osKernelStackInit(int i)
     TCB_STACK[i][STACKSIZE - 15] = 0x05050505;
     TCB_STACK[i][STACKSIZE - 16] = 0x04040404;
 }
+
+/*--------------------------------------------------*/
 
 uint8_t osKernelAddThreads(void (*task0)(void),
                            void (*task1)(void),
@@ -83,20 +98,24 @@ uint8_t osKernelAddThreads(void (*task0)(void),
     osKernelStackInit(IDLE_THREAD_IDX);
     TCB_STACK[IDLE_THREAD_IDX][STACKSIZE - 2] = (int32_t)IdleTask;
 
-    for (int i = 0; i < NUM_THREADS; i++) {
-        tcbs[i].sleepTime = 0;
+    for (int i = 0; i < NUM_OF_THREADS; i++) {
+            tcbs[i].sleepTime = 0;
+            tcbs[i].state = READY;
     }
-
     currentPt = &tcbs[0];
 
     __enable_irq();
     return 1;
 }
 
+/*--------------------------------------------------*/
+
 void osKernelInit(void)
 {
     MILLIS_PRESCALER = (BUS_FREQ / 1000U);
 }
+
+/*--------------------------------------------------*/
 
 void osKernelLaunch(uint32_t quanta_ms)
 {
@@ -112,39 +131,87 @@ void osKernelLaunch(uint32_t quanta_ms)
     osSchedulerLaunch();
 }
 
+/*--------------------------------------------------*/
+
 void osThreadYield(void)
 {
     SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
 }
 
+/*--------------------------------------------------*/
+
 void osThreadSleep(uint32_t sleep_ms)
 {
     __disable_irq();
     currentPt->sleepTime = sleep_ms;
+    currentPt->state = SLEEPING;
     __enable_irq();
 
     osThreadYield();
 }
 
+/*--------------------------------------------------*/
+
 void SysTick_Handler(void)
 {
-    for (int i = 0; i < NUM_THREADS; i++) {
-        if (tcbs[i].sleepTime > 0) {
+    for (int i = 0; i < NUM_OF_THREADS; i++)
+    {
+        if (tcbs[i].sleepTime > 0)
+        {
             tcbs[i].sleepTime--;
+
+            if (tcbs[i].sleepTime == 0 &&
+                tcbs[i].state == SLEEPING)
+            {
+                tcbs[i].state = READY;
+            }
         }
     }
 
     SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
 }
 
+/*--------------------------------------------------*/
+
 void osSchedulerRRWithSleep(void)
 {
-    for (int i = 0; i < NUM_THREADS; i++) {
+    for (int i = 0; i < NUM_OF_THREADS; i++)
+    {
         currentPt = currentPt->nextPt;
-        if (currentPt->sleepTime == 0) {
-            return;
-        }
+
+        if (currentPt->state == BLOCKED_MUTEX)
+            continue;
+
+        if (currentPt->state == SLEEPING)
+            continue;
+
+        return;
     }
 
     currentPt = &tcbs[IDLE_THREAD_IDX];
 }
+
+/*--------------------------------------------------*/
+int osThreadGetId(void)
+{
+    return (int)(currentPt - &tcbs[0]);
+}
+/*--------------------------------------------------*/
+void osThreadBlock(void)
+{
+    __disable_irq();
+    currentPt->state = BLOCKED_MUTEX;
+    __enable_irq();
+
+    osThreadYield();
+}
+
+/*--------------------------------------------------*/
+
+void osThreadUnblock(int id)
+{
+    __disable_irq();
+    tcbs[id].state = READY;
+    __enable_irq();
+}
+/*--------------------------------------------------*/

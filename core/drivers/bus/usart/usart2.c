@@ -29,10 +29,10 @@ void usart2_init_16mhz_115200(void)
     // 4) USART2 clock
     RCC->APB1ENR |= USART2_EN;
 
-    // 5) Disable before config
+    // 5) Disable
     USART2->CR1 = 0;
 
-    // 6) Baudrate (zakładamy PCLK1 = 16 MHz)
+    // 6) Baudrate ( PCLK1 = 16 MHz)
     usart2_set_brr_overs16(16000000U, 115200U);
 
     // 7) Enable TX + USART

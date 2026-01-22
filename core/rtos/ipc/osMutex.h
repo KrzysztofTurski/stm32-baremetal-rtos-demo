@@ -3,6 +3,8 @@
 
 typedef struct {
     volatile uint8_t locked;
+    volatile int owner;
+    volatile uint32_t waitingMask;
 } osMutex_t;
 
 void osMutexInit(osMutex_t *m);
