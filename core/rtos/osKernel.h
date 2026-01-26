@@ -15,8 +15,13 @@ uint8_t osKernelAddThreads(void (*task0)(void),
 void osThreadYield(void);
 void osThreadSleep(uint32_t sleep_ms);
 
+typedef enum {
+    READY,
+    BLOCKED_MUTEX,
+    SLEEPING
+} threadState_t;
 
-void osThreadBlock(void);
+void osThreadBlock(threadState_t reason);
 void osThreadUnblock(int id);
 int  osThreadGetId(void);
 

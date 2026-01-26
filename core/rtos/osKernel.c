@@ -5,7 +5,7 @@ static void IdleTask(void);
 
 #define NUM_OF_THREADS    4
 #define IDLE_THREAD_IDX  3
-#define NUM_THREADS      4
+
 
 #define STACKSIZE        800
 #define BUS_FREQ         16000000U
@@ -17,13 +17,10 @@ static void IdleTask(void);
 #define PENDSVSET        (1U << 28)
 
 uint32_t MILLIS_PRESCALER;
-typedef enum {
-    READY,
-    BLOCKED_MUTEX,
-    SLEEPING
-} threadState_t;
 
 
+void osThreadBlock(threadState_t reason);
+void osThreadUnblock(int id);
 typedef struct tcb {
     int32_t *stackPt;
     struct tcb *nextPt;
@@ -192,26 +189,39 @@ void osSchedulerRRWithSleep(void)
 }
 
 /*--------------------------------------------------*/
+
 int osThreadGetId(void)
 {
     return (int)(currentPt - &tcbs[0]);
 }
-/*--------------------------------------------------*/
-void osThreadBlock(void)
-{
-    __disable_irq();
-    currentPt->state = BLOCKED_MUTEX;
-    __enable_irq();
 
-    osThreadYield();
+/*--------------------------------------------------*/
+
+void osThreadBlock(threadState_t reason)
+{
+
+    currentPt->state = reason;
+
+
+    SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
+    __DSB();
+    __ISB();
+
+
+    __enable_irq();
 }
 
 /*--------------------------------------------------*/
 
 void osThreadUnblock(int id)
 {
-    __disable_irq();
+
     tcbs[id].state = READY;
-    __enable_irq();
 }
-/*--------------------------------------------------*/
+
+
+
+
+
+
+
