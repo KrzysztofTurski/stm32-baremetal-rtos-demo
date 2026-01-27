@@ -18,9 +18,6 @@ static void IdleTask(void);
 
 uint32_t MILLIS_PRESCALER;
 
-
-void osThreadBlock(threadState_t reason);
-void osThreadUnblock(int id);
 typedef struct tcb {
     int32_t *stackPt;
     struct tcb *nextPt;
@@ -72,7 +69,7 @@ static void osKernelStackInit(int i)
 
 /*--------------------------------------------------*/
 
-uint8_t osKernelAddThreads(void (*task0)(void),
+uint8_t osKernelAddThreads(void (*TaskLPS)(void),
                            void (*task1)(void),
                            void (*task2)(void))
 {
@@ -84,7 +81,7 @@ uint8_t osKernelAddThreads(void (*task0)(void),
     tcbs[IDLE_THREAD_IDX].nextPt = &tcbs[0];
 
     osKernelStackInit(0);
-    TCB_STACK[0][STACKSIZE - 2] = (int32_t)task0;
+    TCB_STACK[0][STACKSIZE - 2] = (int32_t)TaskLPS;
 
     osKernelStackInit(1);
     TCB_STACK[1][STACKSIZE - 2] = (int32_t)task1;
@@ -132,7 +129,7 @@ void osKernelLaunch(uint32_t quanta_ms)
 
 void osThreadYield(void)
 {
-    SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
+    SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
 }
 
 /*--------------------------------------------------*/
@@ -165,7 +162,7 @@ void SysTick_Handler(void)
         }
     }
 
-    SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
+    SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
 }
 
 /*--------------------------------------------------*/
@@ -203,7 +200,7 @@ void osThreadBlock(threadState_t reason)
     currentPt->state = reason;
 
 
-    SCB->ICSR = SCB_ICSR_PENDSVSET_Msk;
+    SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
     __DSB();
     __ISB();
 

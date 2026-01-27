@@ -1,4 +1,4 @@
-/* osKernel.h (MINIMUM) */
+
 #ifndef OSKERNEL_H_
 #define OSKERNEL_H_
 
@@ -7,9 +7,9 @@
 void osKernelInit(void);
 void osKernelLaunch(uint32_t quanta_ms);
 
-//uint8_t osKernelAddThreads();
-uint8_t osKernelAddThreads(void (*task0)(void),
-                           void (*task1)(void),
+
+uint8_t osKernelAddThreads(void (*task1)(void),
+                           void (*TaskLPS)(void),
                            void (*task2)(void));
 
 void osThreadYield(void);
