@@ -6,14 +6,14 @@
 #include <stdint.h>
 
 
-/* Funkcje publiczne */
+
 void I2C1_init(void);
 void I2C1_byteRead(char saddr, char maddr, char* data);
 void I2C1_byteWrite(char saddr, char maddr, char data);
 void I2C1_burstRead(char saddr, char maddr, int n, char* data);
 void I2C1_burstWrite(char saddr, char maddr, int n, char* data);
 
-/* Przydatne definicje */
+
 #define SR1_SB      (1U<<0)
 #define SR1_ADDR    (1U<<1)
 #define SR1_BTF     (1U<<2)
@@ -31,4 +31,4 @@ void I2C1_burstWrite(char saddr, char maddr, int n, char* data);
 
 
 
-#endif /* I2C_H_ */
+#endif 
