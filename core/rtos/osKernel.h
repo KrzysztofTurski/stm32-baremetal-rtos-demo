@@ -8,18 +8,22 @@ void osKernelInit(void);
 void osKernelLaunch(uint32_t quanta_ms);
 
 
-uint8_t osKernelAddThreads(void (*task1)(void),
-                           void (*TaskLPS)(void),
-                           void (*task2)(void));
+uint8_t osKernelAddThreads(void (*TaskLPS)(void),
+		   	   	   	   	   void (*TaskLogger)(void),
+						   void (*task2)(void));
+
 
 void osThreadYield(void);
 void osThreadSleep(uint32_t sleep_ms);
 
 typedef enum {
-    READY,
+    READY = 0,
+    SLEEPING,
     BLOCKED_MUTEX,
-    SLEEPING
+    BLOCKED_QUEUE_RX,
+    BLOCKED_QUEUE_TX
 } threadState_t;
+
 
 void osThreadBlock(threadState_t reason);
 void osThreadUnblock(int id);

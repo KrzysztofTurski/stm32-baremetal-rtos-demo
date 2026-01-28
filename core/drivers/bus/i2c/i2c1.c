@@ -10,7 +10,7 @@
 
 #define I2C_100KHZ              80      // Standard mode 100kHz
 #define SD_MODE_MAX_RISE_TIME   17
-#define I2C_TIMEOUT 100000  // dopasuj w razie potrzeby
+#define I2C_TIMEOUT 100000 
 
 
 
@@ -103,7 +103,6 @@ void I2C1_burstRead(char saddr, char maddr, int n, char* data)
     volatile int tmp;
     int timeout;
 
-    // Czekamy aż I2C nie będzie zajęty
     timeout = I2C_TIMEOUT;
     while ((I2C1->SR2 & SR2_BUSY) && --timeout) {}
     if (timeout == 0) return;
@@ -114,7 +113,7 @@ void I2C1_burstRead(char saddr, char maddr, int n, char* data)
     while (!(I2C1->SR1 & SR1_SB) && --timeout) {}
     if (timeout == 0) return;
 
-    // Wysyłamy adres slave (WRITE)
+  
     I2C1->DR = saddr << 1;
     timeout = I2C_TIMEOUT;
     while (!(I2C1->SR1 & SR1_ADDR) && --timeout) {}

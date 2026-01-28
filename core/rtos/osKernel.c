@@ -69,8 +69,8 @@ static void osKernelStackInit(int i)
 
 /*--------------------------------------------------*/
 
-uint8_t osKernelAddThreads(void (*TaskLPS)(void),
-                           void (*task1)(void),
+uint8_t osKernelAddThreads(void (*TaskLogger)(void),
+                           void (*TaskLPS)(void),
                            void (*task2)(void))
 {
     __disable_irq();
@@ -84,7 +84,7 @@ uint8_t osKernelAddThreads(void (*TaskLPS)(void),
     TCB_STACK[0][STACKSIZE - 2] = (int32_t)TaskLPS;
 
     osKernelStackInit(1);
-    TCB_STACK[1][STACKSIZE - 2] = (int32_t)task1;
+    TCB_STACK[1][STACKSIZE - 2] = (int32_t)TaskLogger;
 
     osKernelStackInit(2);
     TCB_STACK[2][STACKSIZE - 2] = (int32_t)task2;
@@ -173,11 +173,10 @@ void osSchedulerRRWithSleep(void)
     {
         currentPt = currentPt->nextPt;
 
-        if (currentPt->state == BLOCKED_MUTEX)
-            continue;
-
-        if (currentPt->state == SLEEPING)
-            continue;
+        if (currentPt->state == BLOCKED_MUTEX)     continue;
+        if (currentPt->state == BLOCKED_QUEUE_RX)  continue;
+        if (currentPt->state == BLOCKED_QUEUE_TX)  continue;
+        if (currentPt->state == SLEEPING)          continue;
 
         return;
     }
