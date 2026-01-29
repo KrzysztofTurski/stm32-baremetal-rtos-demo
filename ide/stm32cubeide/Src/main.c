@@ -1,13 +1,10 @@
-
-
 #include <stdint.h>
 #include "stm32f4xx.h"
 
-
-void app_start(void);
+extern void app_start(void);
 
 int main(void)
 {
-	app_start();
-	while (1) {}
+    app_start();
+    while (1) {}
 }
