@@ -113,6 +113,9 @@ HC: D=15 cm
 
 ## Project structure
 
+## Project structure
+
+```text
 stm32-baremetal-rtos-demo/
 ├── README.md
 ├── docs/
@@ -142,6 +145,7 @@ stm32-baremetal-rtos-demo/
 │   └── stm32f411/cmsis/
 └── ide/
     └── stm32cubeide/
+
 
 
 ---
