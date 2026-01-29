@@ -88,7 +88,7 @@ static void TaskLogger(void)
 
             char buf[64];
             snprintf(buf, sizeof(buf),
-                     "LPSOSTATNIA : %d.%02d C | %d.%02d hPa\n",
+                     "LPS : %d.%02d C | %d.%02d hPa\n",
                      t_int, t_frac, p_int, p_frac);
             log_write(buf);
         }
