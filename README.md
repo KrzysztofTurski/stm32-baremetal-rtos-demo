@@ -1,4 +1,4 @@
-# STM32F411RE Bare-Metal RTOS Platform (WIP)
+# STM32F411RE Bare-Metal RTOS Platform 
 
 An educational bare-metal RTOS platform for the **STM32F411RE (Cortex-M4)**, written from scratch in **C + ARM assembly (PendSV)**.  
 No HAL. No FreeRTOS.
@@ -58,15 +58,15 @@ work together in a clean project structure and run on real hardware.
 3. **PendSV handler** saves the current context, selects the next runnable thread (RR), restores its context, and returns.
 
 ### Data flow (pipeline)
+
 Two producer tasks sample sensors and publish data to “latest” mailboxes.  
 A single Logger task consumes those samples, converts/formats them, and outputs via UART.
-[TaskLPS] ┐
-├──> mailbox (latest) ──> [TaskLogger] ──> USART2 TX
+
+```text
+[TaskLPS]   ┐
+            ├──> mailbox (latest) ──> [TaskLogger] ──> USART2 TX
 [TaskSonar] ┘
-
-**For detailed kernel, scheduler, and IPC design notes, see the documentation in `docs/architecture/`.**
-
----
+```
 
 ## Tasks (current)
 
@@ -85,10 +85,12 @@ A single Logger task consumes those samples, converts/formats them, and outputs 
   - converts and formats values
   - prints log lines on USART2 (mutex-protected single writer)
 
-Example log lines:
-LPS: 24.40 C | 1014.00 hPa
-HC: D=15 cm
 
+Example log lines:
+```text
+LPS: 24.40 C | 1014.00 hPa
+HC:  D=15 cm
+```
 
 ---
 
@@ -110,8 +112,6 @@ HC: D=15 cm
 - TIM2 configured for **1 µs tick** to measure pulse width
 
 ---
-
-## Project structure
 
 ## Project structure
 
@@ -167,42 +167,30 @@ Recommended serial settings:
 ---
 
 ## Roadmap (planned)
-- Documentation improvements (architecture diagrams, design notes)
-- CMSIS/platform cleanup and consistent naming
-- FIFO queue IPC + optional timeouts
-- Optional: thread priorities and alternative scheduling policies
-- Additional peripherals (DMA / SPI / more sensors)
-- Additional sensor and memory integrations, such as:
-  - **ADXL345 / ADXL3xx accelerometer** (SPI or I2C, motion and orientation data)
-  - **External EEPROM** (I2C/SPI) for persistent storage and configuration
-- Integration of new peripherals as RTOS-driven tasks using the existing IPC model
+
+- Architecture documentation and diagrams  
+- CMSIS / platform cleanup and consistent naming  
+- FIFO queue IPC with optional timeouts  
+- Additional peripherals (SPI, DMA, selected sensors)  
+
 
 ---
 ## Background & Inspiration
 
-This project is inspired by a series of advanced embedded systems courses authored by  
-**Israel Gbati** (Firmware Engineer, author of *Bare-Metal Embedded C Programming*).
+This project is inspired by advanced embedded systems courses by  
+**Israel Gbati** (author of *Bare-Metal Embedded C Programming*).
 
-In particular, the following courses provided the conceptual foundation:
+The implementation is independent and extended beyond the course material,  
+serving as a long-term learning and experimentation platform focused on:
 
-- **Embedded Systems Bare-Metal Programming From Ground Up™ (STM32)**
-- **Build Your Own Real-Time OS (RTOS) From Ground Up™ on ARM – Part 1**
-- **Build Your Own Real-Time OS (RTOS) From Ground Up™ on ARM – Part 2**
+- ARM Cortex-M internals and exception handling  
+- RTOS kernel design and scheduling  
+- Low-level peripheral drivers  
+- Practical inter-task communication and synchronization  
 
-These courses focus on understanding ARM Cortex-M internals, low-level programming,
-and RTOS kernel design through hands-on implementation rather than framework usage.
+This repository is not a course reproduction.  
+It represents an original implementation built to deepen understanding of bare-metal embedded systems and RTOS architecture through real hardware experimentation.
 
-This repository is **not a course reproduction**.  
-Instead, it represents an **independent implementation and extension** of the ideas learned,
-expanded into a practical, hardware-driven RTOS platform that includes:
-
-- real peripheral drivers (UART, I2C, timers),
-- inter-task communication used in real workloads,
-- bug fixing and design trade-offs beyond the course scope,
-- a reusable and scalable project structure suitable for further development.
-
-The project is intentionally developed as a long-term learning platform and portfolio project,
-with continuous refactoring, documentation, and feature expansion.
 
 
 ## License
