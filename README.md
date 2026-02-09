@@ -30,8 +30,7 @@ work together in a clean project structure and run on real hardware.
   - `READY`
   - `SLEEPING`
   - `BLOCKED_MUTEX`
-  - `BLOCKED_QUEUE_RX`
-  - `BLOCKED_QUEUE_TX`
+  
 - `IdleTask` uses **`__WFI()`** to sleep the CPU when no thread is runnable
 
 ### IPC
