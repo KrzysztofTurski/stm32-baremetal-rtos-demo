@@ -56,7 +56,7 @@ void osMailboxGet(osMailbox2x32_t *m, uint32_t *a, uint32_t *b)
         int me = osThreadGetId();
         m->waitingRxMask |= (1U << me);
 
-        osThreadBlock(BLOCKED_QUEUE_RX);
+        osThreadBlock(BLOCKED_MBOX_RX);
         /* returns here after being unblocked */
     }
 }

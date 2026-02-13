@@ -7,8 +7,9 @@ typedef enum {
     READY = 0,
     SLEEPING,
     BLOCKED_MUTEX,
-    BLOCKED_QUEUE_RX,
-    BLOCKED_QUEUE_TX
+	BLOCKED_MBOX_RX,
+    //BLOCKED_QUEUE_RX,
+    //BLOCKED_QUEUE_TX
 } threadState_t;
 
 void    osKernelInit(void);

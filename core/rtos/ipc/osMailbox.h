@@ -23,4 +23,4 @@ void osMailboxGet(osMailbox2x32_t *m, uint32_t *a, uint32_t *b);
 /* Non-blocking read; returns 1 if data read, 0 if mailbox empty */
 int  osMailboxTryGet(osMailbox2x32_t *m, uint32_t *a, uint32_t *b);
 
-#endif /* RTOS_IPC_OSMAILBOX_H_ */
+#endif

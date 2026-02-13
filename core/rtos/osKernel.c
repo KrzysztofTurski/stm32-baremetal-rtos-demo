@@ -148,8 +148,9 @@ void osSchedulerRRWithSleep(void)
         currentPt = currentPt->nextPt;
 
         if (currentPt->state == BLOCKED_MUTEX)     continue;
-        if (currentPt->state == BLOCKED_QUEUE_RX)  continue;
-        if (currentPt->state == BLOCKED_QUEUE_TX)  continue;
+        if (currentPt->state == BLOCKED_MBOX_RX)   continue;
+        //if (currentPt->state == BLOCKED_QUEUE_RX)  continue;
+        //if (currentPt->state == BLOCKED_QUEUE_TX)  continue;
         if (currentPt->state == SLEEPING)          continue;
 
         return;
