@@ -122,9 +122,9 @@ void osThreadSleep(uint32_t sleep_ms)
     __disable_irq();
     currentPt->sleepTime = sleep_ms;
     currentPt->state = SLEEPING;
+    osThreadYield();
     __enable_irq();
 
-    osThreadYield();
 }
 
 void SysTick_Handler(void)
